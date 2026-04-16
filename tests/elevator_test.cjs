@@ -105,28 +105,28 @@ describe('Elevator', function() {
 
     // adjustment
     let endFloor = elevator.checkReturnToLoby() ? 0 : 5
-    let floorsTraversed = elevator.checkReturnToLoby() ? 22 : 15
+    let floorsTraversed = elevator.checkReturnToLoby() ? 20 : 15
 
     elevator.dispatch()
     assert.equal(elevator.stops, 4)
     assert.equal(elevator.floorsTraversed, floorsTraversed)
     assert.equal(elevator.currentFloor, endFloor)
-
+    
     elevator.reset()
-
+    
     //person A goes up and B goes down
     personA = new Person('Beverly',3,6)
     personB = new Person('James',5,1)
     elevator.requests = [personA, personB]
     endFloor = elevator.checkReturnToLoby() ? 0 : 1
     floorsTraversed = elevator.checkReturnToLoby() ? 12 : 11
-
+    
     elevator.dispatch()
-
+    
     assert.equal(elevator.stops, 4)   
     assert.equal(elevator.floorsTraversed, floorsTraversed)
     assert.equal(elevator.currentFloor, endFloor)
-
+    
     elevator.reset()
 
     //person A goes down and B goes up
@@ -157,13 +157,13 @@ describe('Elevator', function() {
     elevator.requests = [personA, personB]
     
     elevator.dispatch()
-
+    
     assert.equal(elevator.stops, 4)
 
     // conflicts first come first serve
     // 0->8->2->5->0 is 22 traversals
     // assert.equal(elevator.floorsTraversed, 16)
-
+    
     assert.equal(elevator.floorsTraversed, 22)
     assert.equal(elevator.currentFloor, 0)
   })

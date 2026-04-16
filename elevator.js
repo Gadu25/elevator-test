@@ -9,12 +9,15 @@ export default class Elevator {
 
   dispatch(){
     // I adjust dispatch to comply with FiFo requirement; I use .shift() so forEach will cause problems
-    while(this.requests.length > 0){
+    while(this.requests.length > 0 || this.riders.length > 0){
       this.goToFloor(this.requests[0])
     }
   }
 
-  goToFloor(person){  
+  goToFloor(person){
+    // early return
+    if(this.requests.length === 0 && this.riders.length === 0) return
+
     // pickup the person requesting the elevator
     while(person.currentFloor !== this.currentFloor){
       this.currentFloor < person.currentFloor ? this.moveUp() : this.moveDown()
@@ -27,8 +30,7 @@ export default class Elevator {
     }
     this.hasDropoff()
 
-    // check if return to lobby
-    if(!this.requests && !this.riders){
+    if(this.requests.length === 0 && this.riders.length === 0){
       if(this.checkReturnToLoby()){
         this.returnToLoby()
       }
