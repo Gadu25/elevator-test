@@ -97,11 +97,17 @@ describe('Elevator', function() {
     let personA = new Person('Oliver',3,6)
     let personB = new Person('Angela',1,5)    
     elevator.requests = [personA, personB]
-    let endFloor = elevator.checkReturnToLoby() ? 0 : 6
-    let floorsTraversed = elevator.checkReturnToLoby() ? 12 : 6
+
+    // this conflicts with (first come, first serve) idea
+    // because 0->3->6->1->5 is total to 15 traversal
+    // let endFloor = elevator.checkReturnToLoby() ? 0 : 6
+    // let floorsTraversed = elevator.checkReturnToLoby() ? 12 : 6
+
+    // adjustment
+    let endFloor = elevator.checkReturnToLoby() ? 0 : 5
+    let floorsTraversed = elevator.checkReturnToLoby() ? 22 : 15
 
     elevator.dispatch()
-
     assert.equal(elevator.stops, 4)
     assert.equal(elevator.floorsTraversed, floorsTraversed)
     assert.equal(elevator.currentFloor, endFloor)
@@ -127,9 +133,16 @@ describe('Elevator', function() {
     personA = new Person('Jeanne',7,1)
     personB = new Person('Karl',2,8)
     elevator.requests = [personA, personB]
-    endFloor = elevator.checkReturnToLoby() ? 0 : 1
-    floorsTraversed = elevator.checkReturnToLoby() ? 16 : 15
-
+    
+    // this conflicts with (first come, first serve) idea
+    // because 0->7->1->2->8 is total to 20 traversal
+    // endFloor = elevator.checkReturnToLoby() ? 0 : 1
+    // floorsTraversed = elevator.checkReturnToLoby() ? 16 : 15
+    
+    // adjusted
+    endFloor = elevator.checkReturnToLoby() ? 0 : 8
+    floorsTraversed = elevator.checkReturnToLoby() ? 28 : 20
+    
     elevator.dispatch()
     
     assert.equal(elevator.stops, 4)
@@ -146,7 +159,12 @@ describe('Elevator', function() {
     elevator.dispatch()
 
     assert.equal(elevator.stops, 4)
-    assert.equal(elevator.floorsTraversed, 16)
+
+    // conflicts first come first serve
+    // 0->8->2->5->0 is 22 traversals
+    // assert.equal(elevator.floorsTraversed, 16)
+
+    assert.equal(elevator.floorsTraversed, 22)
     assert.equal(elevator.currentFloor, 0)
   })
   
