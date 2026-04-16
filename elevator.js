@@ -8,10 +8,11 @@ export default class Elevator {
   }
 
   dispatch(){
-    // I adjust dispatch to comply with FiFo requirement; I use .shift() so forEach will cause problems
-    while(this.requests.length > 0 || this.riders.length > 0){
-      this.goToFloor(this.requests[0])
-    }
+    this.requests.forEach(request => {
+      if(this.riders.length || this.requests.length){
+        this.goToFloor(request)
+      }
+    })
   }
 
   goToFloor(person){
@@ -19,16 +20,20 @@ export default class Elevator {
     if(this.requests.length === 0 && this.riders.length === 0) return
 
     // pickup the person requesting the elevator
-    while(person.currentFloor !== this.currentFloor){
-      this.currentFloor < person.currentFloor ? this.moveUp() : this.moveDown()
-    }
-    this.hasPickup()
+    if(this.requests.length > 0){
+      while(person.currentFloor !== this.currentFloor){
+        this.currentFloor < person.currentFloor ? this.moveUp() : this.moveDown()
+      }
+      this.hasPickup()
+    } 
 
     // drop the person to dropOffFloor
-    while(person.dropOffFloor !== this.currentFloor){
-      this.currentFloor < person.dropOffFloor ? this.moveUp() : this.moveDown()
+    if(this.riders.length > 0){
+      while(person.dropOffFloor !== this.currentFloor){
+        this.currentFloor < person.dropOffFloor ? this.moveUp() : this.moveDown()
+      }
+      this.hasDropoff()
     }
-    this.hasDropoff()
 
     if(this.requests.length === 0 && this.riders.length === 0){
       if(this.checkReturnToLoby()){
@@ -56,32 +61,24 @@ export default class Elevator {
   }
 
   hasStop(){
-    const currentRequest = this.requests[0]
-    const currentRider = this.riders[0]
-
-    const canPickup = currentRequest && currentRequest.currentFloor === this.currentFloor && !currentRider
-    const canDrop = currentRider && currentRider.dropOffFloor === this.currentFloor
-    
-    return canPickup || canDrop
+    return this.hasPickup() || this.hasDropoff()
   }
-
+  
   hasPickup(){
-    const currentRequest = this.requests[0]
-    const canPickup = currentRequest.currentFloor === this.currentFloor
+    const floorRequests = this.requests.filter(request => request.currentFloor === this.currentFloor)
+    if(floorRequests.length === 0) return false
 
-    if(canPickup){
-      this.riders.push(currentRequest)
-      this.requests.shift()
-    }
+    this.riders.push(...floorRequests)
+    this.requests = this.requests.filter(request => request.currentFloor !== this.currentFloor)
+    return true
   }
 
   hasDropoff(){
-    const currentRider = this.riders[0]
-    const canDrop = currentRider.dropOffFloor === this.currentFloor
+    const floorDropOffs = this.riders.filter(rider => rider.dropOffFloor === this.currentFloor)
+    if(floorDropOffs.length === 0) return false
 
-    if(canDrop){
-      this.riders.shift()
-    }
+    this.riders = this.riders.filter(rider => rider.dropOffFloor !== this.currentFloor)
+    return true
   }
 
   checkReturnToLoby(){
