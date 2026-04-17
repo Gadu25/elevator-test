@@ -1,0 +1,19 @@
+#elevator-shaft {
+  position: relative;
+  height: 600px;
+  width: 100px;
+  border: 2px solid black;
+  margin: 20px;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+#elevator {
+  position: absolute;
+  bottom: 0;
+  width: 100px;
+  height: 60px;
+  border-radius: 4px;
+  background-color: gray;
+  transition: bottom 0.5s ease-in-out;
+}

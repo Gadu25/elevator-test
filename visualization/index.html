@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Elevator Visualizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="elevator-shaft">
+    <div id="elevator"></div>
+  </div>
+  
+  <div id="controls">
+    <div id="status">Status: Idle | Floor: 0</div>
+    <hr>
+    <form onsubmit="return false">
+      <h3>Add Person</h3>
+      <label>Name:</label> <input type="text" id="input-name" placeholder="e.g. Alex" required/>
+      <label>Current Floor:</label> <input type="number" id="input-current" value="0" max="9"/>
+      <label>Drop Floor:</label> <input type="number" id="input-drop" value="5" max="9"/>
+      <button id="btn-add">Add to Queue</button>
+    </form>
+
+    <hr>
+    <h3>Pending Requests</h3>
+    <table id="request-table" border="1">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>From</th>
+          <th>To</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <br>
+    <button id="btn-dispatch">DISPATCH ELEVATOR</button>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
